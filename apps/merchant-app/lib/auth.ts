@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
-      if (!user?.email || !account) {
+      if (!user?.email || !account?.provider) {
         return false;
       }
 
@@ -20,16 +20,14 @@ export const authOptions: NextAuthOptions = {
         where: {
           email: user.email,
         },
-        update: {
-          name: user.name ?? "",
-          auth_type:
-            account.provider === "google" ? "Google" : "Github",
-        },
         create: {
           email: user.email,
           name: user.name ?? "",
-          auth_type:
-            account.provider === "google" ? "Google" : "Github",
+          auth_type: account.provider === "google" ? "Google" : "Github",
+        },
+        update: {
+          name: user.name ?? "",
+          auth_type: account.provider === "google" ? "Google" : "Github",
         },
       });
 
